@@ -59,5 +59,61 @@ plt.show()
 
 
 ### Labeling Axes and Addin a legend value
+axs = plt.axes()
+axs.set_xlim([-5,5])
+axs.set_ylim([0,1.0])
+axs.set_xticks([-5,-4,-3,-2,-1,0,1,2,3,4,5])
+axs.set_yticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+axs.grid()
+plt.xlabel("This is the X Axes")
+plt.ylabel("This is the Y Axes")
+plt.plot(x, norm.pdf(x), 'b-')   # Blue and as a line
+plt.plot(x, norm.pdf(x, 1.0, 0.5), 'r:') # Red and with vertical hashes
+plt.legend(['Xs', 'Os'], loc=4)   ## loc is the location as to where the legend is.
+plt.show()
+
+### xkcd=>  little easter egg to change the style to comic format! call on plt.xkcd()
+### for Fun:
+plt.xkcd()
+fig, axs = plt.subplots()
+
+axs.spines['right'].set_color('none')
+axs.spines['top'].set_color('none')
+plt.xticks([])
+plt.yticks([])
+axs.set_ylim([-30,10])
+
+data = np.ones(100)
+data[70:] -= np.arange(30)
+
+plt.annotate(
+    "THE DAY I REALIZED\nI COULD COOK BACON\nWHENEVER I WANTED",
+    xy=(70,1), arrowprops=dict(arrowstyle='->'), xytext=(15,-10)
+)
+
+plt.plot(data)
+plt.xlabel('time')
+plt.ylabel('my overall health')
+
+plt.show()
+
+# Remove the mode:
+plt.rcdefaults()
+
+####################### PIE CHARTS
+values = [12,55,4,32,14]
+colors = ['r','g','b','c','m']
+explode = [0,0,0.2,0,0]
+labels = ['India','United States','Russia','China','Europe']
+plt.pie(values, colors=colors, labels = labels, explode = explode)
+plt.title("Location of Students")
+plt.show()
 
 
+########  Bar Charts
+values = [12,55,4,32,14]
+colors = ['r','g','b','c','m']
+plt.bar(range(0,5), values, colors = colors)
+plt.show()
+
+######

@@ -113,7 +113,30 @@ plt.show()
 ########  Bar Charts
 values = [12,55,4,32,14]
 colors = ['r','g','b','c','m']
-plt.bar(range(0,5), values, colors = colors)
+plt.bar(range(0,5), values, color = colors)
 plt.show()
 
-######
+######  Scatter
+x = np.random.rand(500)
+y = np.random.rand(500)
+plt.scatter(x,y)  # random 500  numbers Normal Distribution
+plt.show()
+
+
+####### Histogram
+incomes = np.random.normal(27000,15000,10000)
+plt.hist(incomes, 50)
+plt.show()
+
+
+### Box and Whisker plot:
+# Box represents inner quartiles 50% of data resides and 25% represents above and below.
+# We define dotted line (whiskers) that indicate the range of data except for outliers, which are plotted outside of the whiskers.
+#Outliers are 1.5 X or more the interquartile range.
+
+uniformskewed = np.random.rand(100) * 100 - 40
+high_outliers = np.random.rand(10) * 50 + 100
+low_outliers = np.random.rand(10) * -50 - 100
+data = np.concatenate((uniformskewed, high_outliers, low_outliers))
+plt.boxplot(data)
+plt.show()

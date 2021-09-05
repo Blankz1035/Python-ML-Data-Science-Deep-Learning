@@ -1,5 +1,4 @@
 from numpy import random, array
-import matplotlib.pyplot as plt
 
 # Create fake income/age clusters for N people in k clusters,
 def createClusteredData(N, k):
@@ -13,3 +12,26 @@ def createClusteredData(N, k):
             X.append([random.normal(incomeCentroid, 10000.0), random.normal(ageCentroid, 2.0)])
     X = array(X)
     return X
+
+
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import scale
+from numpy import random, float
+
+# 100 random people and 5 clusters.
+data = createClusteredData(100, 5)
+
+# create a model with n number of clusters
+model = KMeans(n_clusters=4)
+
+# Note I'm scaling the data to normalize it! Important for good results.
+model = model.fit(scale(data))
+
+# We can look at the clusters each data point was assigned to
+print(model.labels_)
+
+# And we'll visualize it:
+plt.figure(figsize=(8, 6))
+plt.scatter(data[:,0], data[:,1], c=model.labels_.astype(float))
+plt.show()

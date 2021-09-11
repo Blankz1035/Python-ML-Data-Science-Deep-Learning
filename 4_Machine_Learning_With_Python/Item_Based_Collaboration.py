@@ -4,6 +4,48 @@
 
 import pandas as pd
 
+### Function for reuseability
+def DisplayUserRecommendations(userID: int):
+    # Now let's produce some movie recommendations for user ID 0
+    myRatings = userRatings.loc[userID].dropna()
+    myRatings
+
+    if myRatings.empty:
+        print("Invalid User")
+    else:
+        # let's go through each movie rated one at a time, and build up a list of possible
+        # recommendations based on the movies similar to the ones rated.
+        print("Beginning Similar Movie Checks...\n")
+        simCandidates = pd.Series()
+        for i in range(0, len(myRatings.index)):
+            print("Adding sims for " + myRatings.index[i] + "...")
+            # Retrieve similar movies to this one that I rated
+            sims = corrMatrix[myRatings.index[i]].dropna()
+            # Now scale its similarity by how well I rated this movie
+            sims = sims.map(lambda x: x * myRatings[i])
+            # Add the score to the list of similarity candidates
+            simCandidates = simCandidates.append(sims)
+
+        print()
+        # Glance at our results so far:
+        print("sorting...\n")
+        simCandidates.sort_values(inplace=True, ascending=False)
+        print(simCandidates.head(10))
+        print()
+        # Note that some of the same movies came up more than once, because they were similar to more than one movie rated.
+        # We'll use groupby() to add together the scores from movies that show up more than once.
+        print("Similar Candidates (Grouped)...\n")
+        simCandidates = simCandidates.groupby(simCandidates.index).sum()
+        simCandidates.sort_values(inplace=True, ascending=False)
+        simCandidates.head(10)
+        print()
+
+        # Last thing we have to do is filter out movies already rated, as recommending a seen movie is not good.
+        print("Filtered Results...\n")
+        filteredSims = simCandidates.drop(myRatings.index)
+        filteredSims.head(10)
+
+
 r_cols = ['user_id', 'movie_id', 'rating']
 ratings = pd.read_csv('../0_data/ml/u.data', sep='\t', names=r_cols, usecols=range(3), encoding="ISO-8859-1")
 
@@ -39,41 +81,25 @@ print("User Rating Correlation with Minimum amount of ratings...\n")
 corrMatrix = userRatings.corr(method='pearson', min_periods=100)
 corrMatrix.head()
 
-# Now let's produce some movie recommendations for user ID 0
-myRatings = userRatings.loc[0].dropna()
-myRatings
+### User Input
 
-# let's go through each movie rated one at a time, and build up a list of possible
-# recommendations based on the movies similar to the ones rated.
-print("Beginning Similar Movie Checks...\n")
-simCandidates = pd.Series()
-for i in range(0, len(myRatings.index)):
-    print("Adding sims for " + myRatings.index[i] + "...")
-    # Retrieve similar movies to this one that I rated
-    sims = corrMatrix[myRatings.index[i]].dropna()
-    # Now scale its similarity by how well I rated this movie
-    sims = sims.map(lambda x: x * myRatings[i])
-    # Add the score to the list of similarity candidates
-    simCandidates = simCandidates.append(sims)
+print("Welcome to the Movie recommendations.")
+choice = 0
+while (choice != 7):
 
-print()
-# Glance at our results so far:
-print("sorting...\n")
-simCandidates.sort_values(inplace=True, ascending=False)
-print(simCandidates.head(10))
-print()
-# Note that some of the same movies came up more than once, because they were similar to more than one movie rated.
-# We'll use groupby() to add together the scores from movies that show up more than once.
-print("Similar Candidates (Grouped)...\n")
-simCandidates = simCandidates.groupby(simCandidates.index).sum()
-simCandidates.sort_values(inplace = True, ascending = False)
-simCandidates.head(10)
-print()
+    try:
+        choice = int(input("Enter a User ID to view recommendations: "))
 
-# Last thing we have to do is filter out movies already rated, as recommending a seen movie is not good.
-print("Filtered Results...\n")
-filteredSims = simCandidates.drop(myRatings.index)
-filteredSims.head(10)
+        ## Call function and display details.
+        DisplayUserRecommendations(choice)
+
+    except:
+        print("Invalid Value.")
+        print()
+
+print("Done")
+
+
 
 
 

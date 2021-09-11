@@ -21,3 +21,23 @@ movieRatings = ratings.pivot_table(index=['user_id'],columns=['title'],values='r
 print(movieRatings.head())
 
 print()
+
+# Let's extract a Series of users who rated Star Wars:
+starWarsRatings = movieRatings['Star Wars (1977)']
+print(starWarsRatings.head())
+
+# Pandas' corrwith function to compute the pairwise correlation of Star Wars' vector of user rating
+# with every other movie. After drop any results that have no data,
+# and construct a new DataFrame of movies and their correlation score (similarity) to Star Wars
+
+similarMovies = movieRatings.corrwith(starWarsRatings) # Create a vector with correlation of all movies.
+similarMovies = similarMovies.dropna() # drop the NA values from the set.
+df = pd.DataFrame(similarMovies) # create a dataframe from this data.
+print(df.head(10)) # View the first 10 rows.
+
+## Sort results:
+print(similarMovies.sort_values(ascending=False))
+
+## Results do not show anything of value. Movies shown may correlate, but have no relationship with star wars as a genre.
+
+

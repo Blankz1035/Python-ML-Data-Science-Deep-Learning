@@ -56,13 +56,13 @@ print()
 
 # Let's get rid of any movies rated by fewer than X people,
 # and check the top-rated ones that are left:
-popularMovies = movieStats['rating']['size'] >= 100
+popularMovies = movieStats['rating']['size'] >= 300
 movieStats[popularMovies].sort_values([('rating', 'mean')], ascending=False)[:15]
 
 # Let's join this data with our original set of similar movies to Star Wars:
 df = movieStats[popularMovies].join(pd.DataFrame(similarMovies, columns=['similarity']))
 # sort these new results by similarity score.
 df = df.sort_values(['similarity'], ascending=False)[:15]
-print("Final Recommendation:\n", df.head())
+print("Final Recommendation:\n", df.head(15))
 
 
